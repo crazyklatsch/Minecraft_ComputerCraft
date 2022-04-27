@@ -1,0 +1,5 @@
+local monitor = peripheral.wrap('monitor_0')
+x, y = monitor.getSize()
+monitor.clear()
+monitor.setCursorPos(x/2, y/2)
+monitor.write('42')

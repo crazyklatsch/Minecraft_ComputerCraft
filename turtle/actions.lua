@@ -190,7 +190,7 @@ function move_dir(dir)
 end
 
 function save_orientation()
-    saved_orientation = state.orientation
+    saved_orientation = state.facing
 end
 
 function move_to_saved_orientation()

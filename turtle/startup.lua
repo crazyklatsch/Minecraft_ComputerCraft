@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 -- set label
 os.setComputerLabel('Turtle ' .. os.getComputerID())
 

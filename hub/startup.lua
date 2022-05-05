@@ -1,4 +1,5 @@
 -- set label
+---@diagnostic disable-next-line: undefined-field
 os.setComputerLabel('Master PC ' .. os.getComputerID())
 
 -- open rednet

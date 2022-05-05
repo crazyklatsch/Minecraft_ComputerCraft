@@ -6,8 +6,12 @@ state = require('state')
 --command[erhalteneskommando[1]](table.unpack(erhalteneskommando, 2))
 
 local saved_orientation = 1
-local saved_pos = coordinate.new
 local home = coordinate.new
+
+-- turning right is positive
+local function get_new_orientation(turns)
+    return ((state.facing + turns - 1) % 4 + 1)
+end
 
 function calibrate()
     x, y, z = gps.locate()
@@ -34,8 +38,8 @@ function calibrate()
 
     turtle.forward()
     local nx, _, nz = gps.locate()
-    if nx == x + 1 then state.facing = orientation.east end
-    if nx == x - 1 then state.facing = orientation.west end
+    if nx == x - 1 then state.facing = orientation.west  end
+    if nx == x + 1 then state.facing = orientation.east  end
     if nz == z + 1 then state.facing = orientation.south end
     if nz == z - 1 then state.facing = orientation.north end
     -- move to original position
@@ -197,10 +201,6 @@ function move_to_saved_orientation()
     face(saved_orientation)
 end
 
-function move_to_saved_position()
-    move_absolute(table.unpack(saved_pos))
-end
-
 function save_home()
     home = state.pos.copy
 end
@@ -265,9 +265,9 @@ function move_forward(amount, force)
         end
         -- update location
         if state.facing == orientation.north then state.pos.z = state.pos.z - 1 end
-        if state.facing == orientation.east then state.pos.x = state.pos.x + 1 end
+        if state.facing == orientation.east  then state.pos.x = state.pos.x + 1 end
         if state.facing == orientation.south then state.pos.z = state.pos.z + 1 end
-        if state.facing == orientation.west then state.pos.x = state.pos.x - 1 end
+        if state.facing == orientation.west  then state.pos.x = state.pos.x - 1 end
     end
     return true
 end
@@ -329,11 +329,6 @@ function turn(turns)
     state.facing = get_new_orientation(turns)
 end
 
--- turning right is positive
-function get_new_orientation(turns)
-    return ((state.facing + turns - 1) % 4 + 1)
-end
-
 function face(side)
     -- check boundaries
     if side < 1 or side > 4 then return end
@@ -346,17 +341,22 @@ end
 
 function move_absolute(nx, ny, nz, force)
     -- stops in place when move was not possible
+    if(nx == nil or ny == nil or nz == nil) then return false end
     return move_relative(nx - state.pos.x, ny - state.pos.y, nz - state.pos.z, force)
 end
 
 function move_into_direction(direction, amount, force)
-    if direction == orientation.north then return move_relative(0, 0, -1 + amount, force) end
+    if(direction == nil) then return false end
+    amount = amount or 1
+    if direction == orientation.north then return move_relative(0, 0, -1 * amount, force) end
     if direction == orientation.east  then return move_relative(amount, 0, 0, force) end
     if direction == orientation.south then return move_relative(0, 0, amount, force) end
     if direction == orientation.west  then return move_relative(-1 * amount, 0, 0, force) end
+    return false
 end
 
 function move_relative(dx, dy, dz, force)
+    if(dx == nil or dy == nil or dz == nil) then return false end
     -- stops in place when move was not possible
     local success = false
     force = force or false

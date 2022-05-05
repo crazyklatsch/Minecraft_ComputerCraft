@@ -3,7 +3,8 @@ local coordinate = require("common.coordinate")
 local state_content = {
     facing = 1,
     pos = coordinate.new,
-    status = 0,
+    state = 0,
+    queue = {},
 }
 
 local state_metadata = {

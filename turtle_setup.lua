@@ -11,4 +11,5 @@ for i=1, #mylist do
 end
 shell.run('mv', '/turtle/*', '/')
 fs.delete('turtle')
+---@diagnostic disable-next-line: undefined-field
 os.reboot()

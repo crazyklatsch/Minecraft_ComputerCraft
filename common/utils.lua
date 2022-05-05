@@ -11,15 +11,15 @@ function table_tostring(o)
     end
  end
 
-function table_cut(table, from, to)
+function table_cut(t, from, to)
    local from = from or 1
-   local to = to or #table
-   local length = #table
+   local to = to or #t
+   local length = #t
    -- remove values [1,from[
    for i = 1, from - 1 do
-      table.remove(1)
+      table.remove(t, 1)
    end
-   for i = to, #table - from do
-      table.remove()
+   for i = to, #t - from do
+      table.remove(t)
    end
 end

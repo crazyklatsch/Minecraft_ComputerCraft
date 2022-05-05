@@ -5,7 +5,7 @@ local commands = {
     'stop',
     'pause',
     'continue',
-    'add_to_action_queue',
+    'append_action',
     'exec_action',
 }
 
@@ -35,7 +35,6 @@ local actions = {
     'move_absolute',
     'move_into_direction',
     'move_relative',
-
 }
 
 command = {}

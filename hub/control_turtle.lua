@@ -3,8 +3,11 @@ require("common.turtle_interface")
 
 local protocol = protocol_turtle_interface
 
---send expects id as number and msg as primitive non-function type
-local function send(id, msg)
+--send expects destination id as first argument and then any number of arguments as message. 
+--Usually the first part of the message is a command from the turtle_interface
+local function send(...)
+    local msg = {table.unpack(...)}
+    local id = table.remove(msg, 1)
     if(not rednet.isOpen()) then
         peripheral.find("modem", rednet.open)
         if(not rednet.isOpen()) then
@@ -16,11 +19,10 @@ local function send(id, msg)
     return true
 end
 
+
 local _,endpos = arg[0]:find("control_turtle.lua")
 if(arg[0] == "turtle_interface" or arg[0]:len() == endpos) then
-    local msg = {table.unpack(arg)}
-    local id = table.remove(msg, 1)
-    send(id, msg)
+    send(table.unpack(arg))
 end
 
 

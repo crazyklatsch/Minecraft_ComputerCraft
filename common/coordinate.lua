@@ -57,9 +57,9 @@ local coordinate_metadata = {
         setmetatable(result, getmetatable(pos1))
         return result
     end
-    
 }
 
+--An array of x y z coordinates, can be indexed with x,y,z
 local coordinate = setmetatable(coordinate_content, coordinate_metadata)
 
 return coordinate

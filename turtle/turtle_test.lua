@@ -1,4 +1,4 @@
-require('actions')
+actions = require('actions')
 
 calibrate()
 save_orientation()

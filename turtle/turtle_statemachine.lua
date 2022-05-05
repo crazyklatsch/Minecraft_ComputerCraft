@@ -20,12 +20,14 @@ end
 
 -- The append command appends an action to the action queue
 local function command_append_action(...)
-    
+    if arg == nil then return false end
+    local msg = {table.unpack(arg)}
 end
 
 -- The exec command executes an action
 local function command_exec_action(...)
-    
+    if arg == nil then return false end
+    local msg = {table.unpack(arg)}
 end
 
 command["stop"] = command_stop
@@ -38,6 +40,7 @@ command["exec_action"] = command_exec_action
 
 local protocol = protocol_turtle_interface
 local stop_requested = false
+
 
 -- check if rednet is activated
 if(not rednet.isOpen()) then
@@ -52,12 +55,9 @@ while not stop_requested do
     pcid, message, protocol = rednet.receive(protocol_turtle_interface)
     -- message is always a table
     if message then
-        if message[1] == command.protocol_turtle_interface then
-            table.insert(actions.state, ({message[2], }))
-        elseif message[1] == command.stop then
-
-        elseif message[1] == command.pause then
-
+        new_command = table.remove(message, 1)
+        if(command[new_command] ~= nil) then
+            command[new_command](message)
         end
     end
 end

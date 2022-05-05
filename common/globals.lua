@@ -29,3 +29,5 @@ junk = {
     'darkstone',
     'coal',
 }
+
+protocol_name = 'mastermind'

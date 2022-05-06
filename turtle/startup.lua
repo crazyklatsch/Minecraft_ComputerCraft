@@ -11,7 +11,7 @@ if not fs.exists('/master_pc_id') then
 end
 
 
-multishell.launch(os.getenv(), '/turtle_statemachine.lua')
-multishell.launch(os.getenv(), '/report_state.lua')
+multishell.launch(getenv(), '/turtle_statemachine.lua')
+multishell.launch(getenv(), '/report_state.lua')
 multishell.setTitle(2, 'statemachine')
 multishell.setTitle(3, 'report_state')

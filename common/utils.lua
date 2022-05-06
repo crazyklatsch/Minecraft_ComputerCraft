@@ -39,13 +39,15 @@ function table_invert(t)
    return s
 end
 
+-- prints colored text to the terminal
+-- format: &fText with color as hex value
+-- for colors see https://tweaked.cc/module/colors.html
 function print_color(...)
    local s = "&0"
    for _, v in ipairs(arg) do
       s = s .. v
    end
    s = s .. "&0"
-
    local fields = {}
    local lastcolor = "0"
    local lastpos = 0
@@ -59,5 +61,7 @@ function print_color(...)
       term.setTextColor(2 ^ (tonumber(fields[i][2], 16)))
       term.write(fields[i][1])
    end
-   term.write('\n')
+   -- reset color and create new line
+   term.setTextColor(color.white)
+   print()
 end

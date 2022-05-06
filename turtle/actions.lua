@@ -11,6 +11,7 @@ local function get_new_orientation(turns)
 end
 
 local function log(text, log_level)
+    local log_level = log_level or log_levels.INFO
     -- TODO rednet send
     -- print message if wanted
     if log_level > print_log_level then return end
@@ -20,7 +21,7 @@ end
 function calibrate()
     x, y, z = gps.locate()
     if not x or not y or not z then
-        print('Not able to get coordinates')
+        log('No gps available', log_levels.ERROR)
         return false
     end
     -- try to find adjacent block
@@ -36,7 +37,7 @@ function calibrate()
     -- if there is still a block in front you can force break it
     if turtle.detect() then
         -- force break??
-        print('Blocks everywhere!')
+        log('Lacking space for calibration', log_levels.ERROR)
         return false
     end
 
@@ -56,7 +57,7 @@ function calibrate()
     state.pos.x = x
     state.pos.y = y
     state.pos.z = z
-    print('Calibrated to ' .. state.pos.x .. ', ' .. state.pos.y .. ', ' .. state.pos.z .. '\nFacing ' .. state.facing)
+    log('Calibrated to ' .. state.pos.x .. ', ' .. state.pos.y .. ', ' .. state.pos.z .. '\nFacing ' .. state.facing, log_levels.INFO)
     return true
 end
 
@@ -67,6 +68,7 @@ function safe_dig(dir)
     if detect(dir) then
         -- dont mine other turtles
         if inspect(dir)[2].name:lower():find('computer') then
+            log('Found turtle when digging', log_levels.WARN)
             return false
         end
     end
@@ -80,6 +82,7 @@ function inspect(dir)
     local dir = dir or direction.front
     if dir == direction.invalid then return false end
 
+    log('Inspecting ' .. direction_strings[dir], log_levels.DEBUG)
     if dir == direction.up then return ({ turtle.inspectUp() }) end
     if dir == direction.down then return ({ turtle.inspectDown() }) end
     if dir == direction.front then return ({ turtle.inspect() }) end
@@ -106,6 +109,7 @@ function detect(dir)
     local dir = dir or direction.front
     if dir == direction.invalid then return false end
 
+    log('Detecting ' .. direction_strings[dir], log_levels.DEBUG)
     if dir == direction.up then return turtle.detectUp() end
     if dir == direction.down then return turtle.detectDown() end
     if dir == direction.front then return turtle.detect() end
@@ -132,6 +136,8 @@ function dig(dir, account_for_gravity_blocks)
     local dir = dir or direction.front
     local account_for_gravity_blocks = account_for_gravity_blocks or true
     if dir == direction.invalid then return false end
+
+    log('Digging ' .. direction_strings[dir], log_levels.DEBUG)
 
     local success = false
     if dir == direction.up then success = turtle.digUp() end
@@ -175,10 +181,11 @@ function drop_shit()
 end
 
 function transfer_to_inventory()
+    log('Transferring inventory', log_levels.DEBUG)
     for i = 1, 16 do
         turtle.select(i)
         if not turtle.drop() then
-            log('Inventory full', severity.WARN)
+            log('Chest full', log_levels.WARN)
             return false
         end
     end
@@ -214,16 +221,19 @@ end
 
 -- saves current position and orientation, returns index of position
 function save_position()
+    log('Saving position @' .. state.pos.x .. '/' .. state.pos.y .. '/' .. state.pos.z, log_levels.DEBUG)
     table.insert(saved_positions, { state.pos.copy, state.facing })
     return #saved_positions
 end
 
 function move_to_saved_position(id)
+    log('Moving to saved position', log_levels.DEBUG)
     move_absolute(table.unpack(saved_positions[id][1]))
     face(saved_positions[id][2])
 end
 
 function clear_saved_positions()
+    log('Clearing saved positions', log_levels.DEBUG)
     saved_positions = {}
 end
 
@@ -234,11 +244,11 @@ function mine_vein()
         local dir = detect_next_ore()
         -- if no ore is found at current pos move back
         if dir == direction.invalid then
-            print('no ore found, moving back')
+            log('No ore found, moving back', log_levels.DEBUG)
             local coord = table.remove(positions)
             move_absolute(table.unpack(coord))
         else
-            print('detected ore in ' .. dir)
+            log('Ore found (' .. direction_strings[dir] .. ')', log_levels.INFO)
             safe_dig(dir)
             table.insert(positions, state.pos.copy)
             move_dir(dir)
@@ -247,6 +257,7 @@ function mine_vein()
 end
 
 function detect_next_ore()
+    log('Trying to find ore', log_levels.DEBUG)
     local ore_name = 'ore' --'cobble'
     -- check up and down
     if detect(direction.up) and inspect(direction.up)[2].name:lower():find(ore_name) then return direction.up end
@@ -271,6 +282,7 @@ function move_back()
 end
 
 function move_forward(amount, force)
+    log('Moving forward for ' .. amount .. ' blocks', log_levels.DEBUG)
     force = force or false
     amount = amount or 1
     for i = 1, amount do
@@ -281,7 +293,10 @@ function move_forward(amount, force)
             sleep(settings.get(settings.turtle_move_wait))
             success = turtle.forward()
             -- return false if move not possible
-            if not success then return false end
+            if not success then
+                log('Could not move forward', log_levels.ERROR)
+                return false
+            end
         end
         -- update location
         if state.facing == orientation.north then state.pos.z = state.pos.z - 1 end
@@ -303,7 +318,10 @@ function move_up(amount, force)
             sleep(settings.get(settings.turtle_move_wait))
             success = turtle.up()
             -- return false if move not possible
-            if not success then return false end
+            if not success then
+                log('Could not move upwards', log_levels.ERROR)
+                return false
+            end
         end
         -- update location
         state.pos.y = state.pos.y + 1
@@ -322,7 +340,10 @@ function move_down(amount, force)
             sleep(settings.get(settings.turtle_move_wait))
             success = turtle.down()
             -- return false if move not possible
-            if not success then return false end
+            if not success then
+                log('Could not move down', log_levels.ERROR)
+                return false
+            end
         end
         -- update location
         state.pos.y = state.pos.y - 1
@@ -342,10 +363,12 @@ end
 
 function turn(turns)
     if turns > 0 then
+        log('Turning right ' .. turns .. ' times', log_levels.DEBUG)
         for i = 1, turns do
             turtle.turnRight()
         end
     else
+        log('Turning left ' .. turns .. ' times', log_levels.DEBUG)
         for i = 1, -1 * turns do
             turtle.turnLeft()
         end
@@ -354,6 +377,7 @@ function turn(turns)
 end
 
 function face(side)
+    log('Facing ' .. orientation_strings[side], log_levels.DEBUG)
     -- check boundaries
     if side < 1 or side > 4 then return end
 
@@ -380,6 +404,7 @@ function move_into_direction(direction, amount, force)
 end
 
 function move_relative(dx, dy, dz, force)
+    log('Moving relative to ' .. dx .. '/' .. dy .. '/' .. dz, log_levels.DEBUG)
     if (dx == nil or dy == nil or dz == nil) then return false end
     -- stops in place when move was not possible
     local success = false

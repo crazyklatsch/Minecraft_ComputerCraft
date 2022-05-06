@@ -1,4 +1,3 @@
-
 protocol_turtle_control = "protocol_turtle_control"
 protocol_turtle_status = "protocol_turtle_state"
 
@@ -9,6 +8,7 @@ local commands = {
     'append_action',
     'exec_action',
     'set_master_pc_id',
+    'update_turtle',
 }
 
 local actions = {
@@ -19,10 +19,9 @@ local actions = {
     'detect',
     'drop_shit',
     'move_dir',
-    'save_orientation',
-    'move_to_saved_orientation',
-    'save_home',
-    'move_to_home',
+    'save_position',
+    'move_to_saved_position',
+    'clear_saved_positions',
     'mine_vein',
     'detect_next_ore',
     'move_back',
@@ -40,11 +39,11 @@ local actions = {
 }
 
 command = {}
-for k,v in pairs(commands) do
+for k, v in pairs(commands) do
     command[v] = v
 end
 
 action = {}
-for k,v in pairs(actions) do
+for k, v in pairs(actions) do
     action[v] = v
 end

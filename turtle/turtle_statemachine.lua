@@ -70,12 +70,18 @@ local function command_set_master_pc_id(...)
     settings.set(settings.master_pc_id, state.master_pc_id)
 end
 
+local function command_update_turtle()
+    local turtle_setup = require('turtle_setup')
+    turtle_setup.setup()
+end
+
 command["stop"] = command_stop
 command["pause"] = command_pause
 command["continue"] = command_continue
 command["append_action"] = command_append_action
 command["exec_action"] = command_exec_action
 command["set_master_pc_id"] = command_set_master_pc_id
+command["update_turtle"] = command_update_turtle
 
 --#endregion commands
 

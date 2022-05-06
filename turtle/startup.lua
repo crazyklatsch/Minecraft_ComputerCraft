@@ -12,6 +12,6 @@ end
 
 
 multishell.launch({}, '/turtle_statemachine.lua')
-multishell.launch({}, '/report.lua')
+multishell.launch({}, '/report_state.lua')
 multishell.setTitle(1, 'statemachine')
-multishell.setTitle(2, 'report')
+multishell.setTitle(2, 'report_state')

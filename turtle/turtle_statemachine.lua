@@ -14,9 +14,9 @@ local allowed_pcids = setmetatable({
     --"5",
     --"6",
 },
-{
+    {
     -- Return true if value is existent
-    __index = function (t, key)
+    __index = function(t, key)
         for _, val in pairs(t) do
             if val == key then
                 return true
@@ -46,30 +46,28 @@ end
 -- The append command appends an action to the action queue
 local function command_append_action(...)
     if arg == nil then return false end
-    table.insert(action_queue, {table.unpack(arg)})
+    table.insert(action_queue, { table.unpack(arg) })
 end
 
 -- The exec command executes an action
 local function command_exec_action(...)
     if arg == nil then return false end
-    local next_action_arguments = {table.unpack(arg)}
+    local next_action_arguments = { table.unpack(arg) }
     local next_action = table.remove(next_action_arguments, 1)
     local retval = nil
-    if(action[next_action] ~= nil) then
+    if (action[next_action] ~= nil) then
         retval = action[next_action](table.unpack(next_action_arguments))
     end
     -- TODO send retval back to master pc id
-    if master_pc_id ~= nil then
-        rednet.send(master_pc_id, retval, protocol_turtle_control)
+    if state.master_pc_id ~= nil then
+        rednet.send(state.master_pc_id, retval, protocol_turtle_control)
     end
 
 end
 
 local function command_set_master_pc_id(...)
     state.master_pc_id = tonumber(arg[1])
-    file = fs.open('/master_pc_id', 'w')
-    file.write(tostring(state.master_pc_id))
-    file.close()
+    settings.set(settings.master_pc_id, state.master_pc_id)
 end
 
 command["stop"] = command_stop
@@ -90,10 +88,9 @@ action['inspect'] = inspect
 action['detect'] = detect
 action['drop_shit'] = drop_shit
 action['move_dir'] = move_dir
-action['save_orientation'] = save_orientation
-action['move_to_saved_orientation'] = move_to_saved_orientation
-action['save_home'] = save_home
-action['move_to_home'] = move_to_home
+action['save_position'] = save_position
+action['move_to_saved_position'] = move_to_saved_position
+action['clear_saved_positions'] = clear_saved_positions
 action['mine_vein'] = mine_vein
 action['detect_next_ore'] = detect_next_ore
 action['move_back'] = move_back
@@ -114,15 +111,16 @@ action['move_relative'] = move_relative
 
 
 -- check if rednet is activated
-if(not rednet.isOpen()) then
+if (not rednet.isOpen()) then
     peripheral.find("modem", rednet.open)
-    if(not rednet.isOpen()) then
+    if (not rednet.isOpen()) then
         print('Could not open rednet. Is a modem attached?')
         return false
     end
 end
 
 
+-- TODO why is it not action.calibrate()
 calibrate()
 while not stop_requested do
     -- handle incoming messages
@@ -130,23 +128,21 @@ while not stop_requested do
     -- message is always a table
     if message and allowed_pcids[tostring(pcid)] then
         new_command = table.remove(message, 1)
-        if(command[new_command] ~= nil) then
+        if (command[new_command] ~= nil) then
             command[new_command](table.unpack(message))
         end
     end
 
     -- execute next action from action queue
     if action_queue_active then
-        if(#action_queue > 0) then
+        if (#action_queue > 0) then
             local next_action_arguments = table.remove(action_queue, 1)
             local next_action = table.remove(next_action_arguments, 1)
-            if(action[next_action] ~= nil) then
+            if (action[next_action] ~= nil) then
                 --if action returns false then action_queue_active = false and state = errorstate
                 action[next_action](table.unpack(next_action_arguments))
             end
         end
     end
-
-    --send state to master pc
 
 end

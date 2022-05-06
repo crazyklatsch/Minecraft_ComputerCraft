@@ -30,5 +30,5 @@ local state_metadata = {
 if state == nil then
     state = setmetatable(state_content, state_metadata)
     --update master_pc_id from file
-    state.master_pc_id = tonumber(fs.open('/master_pc_id', 'r').readAll())
+    state.master_pc_id = settings.get(settings.master_pc_id)
 end

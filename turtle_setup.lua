@@ -5,8 +5,9 @@ require('git')
 git.get('common')
 git.get('turtle')
 git.get('turtle_setup.lua')
+
 local mylist = fs.list('turtle/')
-for i=1, #mylist do
+for i = 1, #mylist do
     shell.run('rm', mylist[i])
 end
 shell.run('mv', '/turtle/*', '/')

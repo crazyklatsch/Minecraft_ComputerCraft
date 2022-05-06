@@ -1,8 +1,5 @@
 require('state')
 
-local master_pc_id = tonumber(fs.open('/master_pc_id'), 'r').readAll()
-
-
 while true do
     local item_count = 0
     local empty_slot_count = 0
@@ -15,7 +12,7 @@ while true do
         end
     end
 
-    rednet.send(master_pc_id, {
+    rednet.send(state.master_pc_id, {
         location         = state.pos,
         facing           = state.facing,
         fuel_level       = turtle.getFuelLevel(),

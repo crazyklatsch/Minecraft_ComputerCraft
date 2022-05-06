@@ -30,4 +30,25 @@ junk = {
     'coal',
 }
 
-protocol_name = 'mastermind'
+print_log_level = log_levels.WARN
+
+-- smaller is more important
+log_levels = {
+    ERROR = 1,
+    WARN  = 2,
+    INFO  = 3,
+}
+
+log_level_strings = table_invert(log_levels)
+
+log_level_color = {
+    '&e',
+    '&1',
+    '&8',
+}
+
+-- just an array to have easier access to settings via settings.get
+settings = {
+    master_pc_id = "master_pc_id",
+    turtle_move_wait = "turtle_move_wait",
+}

@@ -3,14 +3,18 @@ require('common.utils')
 require('state')
 coordinate = require('common.coordinate')
 
---command[erhalteneskommando[1]](table.unpack(erhalteneskommando, 2))
-
-local saved_orientation = 1
-local home = coordinate.new
+local saved_positions = {}
 
 -- turning right is positive
 local function get_new_orientation(turns)
     return ((state.facing + turns - 1) % 4 + 1)
+end
+
+local function log(text, log_level)
+    -- TODO rednet send
+    -- print message if wanted
+    if log_level > print_log_level then return end
+    print_color('[' .. log_level_color[log_level] .. log_level_strings[log_level] .. '&0] ' .. text)
 end
 
 function calibrate()
@@ -38,8 +42,8 @@ function calibrate()
 
     turtle.forward()
     local nx, _, nz = gps.locate()
-    if nx == x - 1 then state.facing = orientation.west  end
-    if nx == x + 1 then state.facing = orientation.east  end
+    if nx == x - 1 then state.facing = orientation.west end
+    if nx == x + 1 then state.facing = orientation.east end
     if nz == z + 1 then state.facing = orientation.south end
     if nz == z - 1 then state.facing = orientation.north end
     -- move to original position
@@ -52,7 +56,7 @@ function calibrate()
     state.pos.x = x
     state.pos.y = y
     state.pos.z = z
-    print('Calibrated to '..state.pos.x..', '..state.pos.y..', '..state.pos.z..'\nFacing '..state.facing)
+    print('Calibrated to ' .. state.pos.x .. ', ' .. state.pos.y .. ', ' .. state.pos.z .. '\nFacing ' .. state.facing)
     return true
 end
 
@@ -76,23 +80,23 @@ function inspect(dir)
     local dir = dir or direction.front
     if dir == direction.invalid then return false end
 
-    if dir == direction.up then return ({turtle.inspectUp()}) end
-    if dir == direction.down then return ({turtle.inspectDown()}) end
-    if dir == direction.front then return ({turtle.inspect()}) end
+    if dir == direction.up then return ({ turtle.inspectUp() }) end
+    if dir == direction.down then return ({ turtle.inspectDown() }) end
+    if dir == direction.front then return ({ turtle.inspect() }) end
 
     local data
     if dir == direction.left then
         turn_left()
-        data = ({turtle.inspect()})
+        data = ({ turtle.inspect() })
         turn_right()
     elseif dir == direction.right then
         turn_right()
-        data = ({turtle.inspect()})
+        data = ({ turtle.inspect() })
         turn_left()
     else
         -- back
         turn_around()
-        data = ({turtle.inspect()})
+        data = ({ turtle.inspect() })
         turn_around()
     end
     return data
@@ -124,15 +128,16 @@ function detect(dir)
     return is_block
 end
 
-function dig(dir)
+function dig(dir, account_for_gravity_blocks)
     local dir = dir or direction.front
+    local account_for_gravity_blocks = account_for_gravity_blocks or true
     if dir == direction.invalid then return false end
 
-    if dir == direction.up then return turtle.digUp() end
-    if dir == direction.down then return turtle.digDown() end
-    if dir == direction.front then return turtle.dig() end
-
     local success = false
+    if dir == direction.up then success = turtle.digUp() end
+    if dir == direction.down then success = turtle.digDown() end
+    if dir == direction.front then success = turtle.dig() end
+
     if dir == direction.left then
         turn_left()
         success = turtle.dig()
@@ -147,6 +152,8 @@ function dig(dir)
         success = turtle.dig()
         turn_around()
     end
+    -- recursively call dig until all gravity blocks are gone
+    if detect(dir) and account_for_gravity_blocks then dig(dir, account_for_gravity_blocks) end
     return success
 end
 
@@ -165,6 +172,18 @@ function drop_shit()
         end
     end
     turtle.select(1)
+end
+
+function transfer_to_inventory()
+    for i = 1, 16 do
+        turtle.select(i)
+        if not turtle.drop() then
+            log('Inventory full', severity.WARN)
+            return false
+        end
+    end
+    turtle.select(1)
+    return true
 end
 
 function move_dir(dir)
@@ -193,20 +212,19 @@ function move_dir(dir)
     return success
 end
 
-function save_orientation()
-    saved_orientation = state.facing
+-- saves current position and orientation, returns index of position
+function save_position()
+    table.insert(saved_positions, { state.pos.copy, state.facing })
+    return #saved_positions
 end
 
-function move_to_saved_orientation()
-    face(saved_orientation)
+function move_to_saved_position(id)
+    move_absolute(table.unpack(saved_positions[id][1]))
+    face(saved_positions[id][2])
 end
 
-function save_home()
-    home = state.pos.copy
-end
-
-function move_to_home()
-    move_absolute(table.unpack(home))
+function clear_saved_positions()
+    saved_positions = {}
 end
 
 function mine_vein()
@@ -220,7 +238,7 @@ function mine_vein()
             local coord = table.remove(positions)
             move_absolute(table.unpack(coord))
         else
-            print('detected ore in '..dir)
+            print('detected ore in ' .. dir)
             safe_dig(dir)
             table.insert(positions, state.pos.copy)
             move_dir(dir)
@@ -229,7 +247,7 @@ function mine_vein()
 end
 
 function detect_next_ore()
-    local ore_name = 'ore'--'cobble'
+    local ore_name = 'ore' --'cobble'
     -- check up and down
     if detect(direction.up) and inspect(direction.up)[2].name:lower():find(ore_name) then return direction.up end
     if detect(direction.down) and inspect(direction.down)[2].name:lower():find(ore_name) then return direction.down end
@@ -256,18 +274,20 @@ function move_forward(amount, force)
     force = force or false
     amount = amount or 1
     for i = 1, amount do
-        if turtle.detect() and force then
-            turtle.dig()
-        end
-        -- return false if move not possible
-        if not turtle.forward() then
-            return false
+        if force then safe_dig(direction.front) end
+        local success = turtle.forward()
+        if not success then
+            -- try to wait until block is no longer obstructed
+            sleep(settings.get(settings.turtle_move_wait))
+            success = turtle.forward()
+            -- return false if move not possible
+            if not success then return false end
         end
         -- update location
         if state.facing == orientation.north then state.pos.z = state.pos.z - 1 end
-        if state.facing == orientation.east  then state.pos.x = state.pos.x + 1 end
+        if state.facing == orientation.east then state.pos.x = state.pos.x + 1 end
         if state.facing == orientation.south then state.pos.z = state.pos.z + 1 end
-        if state.facing == orientation.west  then state.pos.x = state.pos.x - 1 end
+        if state.facing == orientation.west then state.pos.x = state.pos.x - 1 end
     end
     return true
 end
@@ -276,12 +296,14 @@ function move_up(amount, force)
     force = force or false
     amount = amount or 1
     for i = 1, amount do
-        if turtle.detectUp() and force then
-            turtle.digUp()
-        end
-        -- return false if move not possible
-        if not turtle.up() then
-            return false
+        if force then safe_dig(direction.up) end
+        local success = turtle.up()
+        if not success then
+            -- try to wait until block is no longer obstructed
+            sleep(settings.get(settings.turtle_move_wait))
+            success = turtle.up()
+            -- return false if move not possible
+            if not success then return false end
         end
         -- update location
         state.pos.y = state.pos.y + 1
@@ -293,12 +315,14 @@ function move_down(amount, force)
     force = force or false
     amount = amount or 1
     for i = 1, amount do
-        if turtle.detectDown() and force then
-            turtle.digDown()
-        end
-        -- return false if move not possible
-        if not turtle.down() then
-            return false
+        if force then safe_dig(direction.down) end
+        local success = turtle.down()
+        if not success then
+            -- try to wait until block is no longer obstructed
+            sleep(settings.get(settings.turtle_move_wait))
+            success = turtle.down()
+            -- return false if move not possible
+            if not success then return false end
         end
         -- update location
         state.pos.y = state.pos.y - 1
@@ -341,22 +365,22 @@ end
 
 function move_absolute(nx, ny, nz, force)
     -- stops in place when move was not possible
-    if(nx == nil or ny == nil or nz == nil) then return false end
+    if (nx == nil or ny == nil or nz == nil) then return false end
     return move_relative(nx - state.pos.x, ny - state.pos.y, nz - state.pos.z, force)
 end
 
 function move_into_direction(direction, amount, force)
-    if(direction == nil) then return false end
+    if (direction == nil) then return false end
     amount = amount or 1
     if direction == orientation.north then return move_relative(0, 0, -1 * amount, force) end
-    if direction == orientation.east  then return move_relative(amount, 0, 0, force) end
+    if direction == orientation.east then return move_relative(amount, 0, 0, force) end
     if direction == orientation.south then return move_relative(0, 0, amount, force) end
-    if direction == orientation.west  then return move_relative(-1 * amount, 0, 0, force) end
+    if direction == orientation.west then return move_relative(-1 * amount, 0, 0, force) end
     return false
 end
 
 function move_relative(dx, dy, dz, force)
-    if(dx == nil or dy == nil or dz == nil) then return false end
+    if (dx == nil or dy == nil or dz == nil) then return false end
     -- stops in place when move was not possible
     local success = false
     force = force or false

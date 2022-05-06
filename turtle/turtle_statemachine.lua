@@ -121,7 +121,7 @@ while not stop_requested do
     if message and allowed_pcids[tostring(pcid)] then
         new_command = table.remove(message, 1)
         if(command[new_command] ~= nil) then
-            command[new_command](message)
+            command[new_command](table.unpack(message))
         end
     end
 

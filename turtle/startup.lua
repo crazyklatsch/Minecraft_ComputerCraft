@@ -1,11 +1,17 @@
----@diagnostic disable: undefined-field
 -- set label
 os.setComputerLabel('Turtle ' .. os.getComputerID())
 
--- open rednet
-for _, side in pairs({'back', 'top', 'left', 'right'}) do
-    if peripheral.getType(side) == 'modem' then
-        rednet.open(side)
-        break
-    end
+local default_pc_master_id = 13
+
+-- create file for master pc id if not present
+if not fs.exists('/master_pc_id') then
+    file = fs.open('/master_pc_id', 'w')
+    file.write(default_pc_master_id)
+    file.close()
 end
+
+
+multishell.launch({}, '/turtle_statemachine.lua')
+multishell.launch({}, '/report.lua')
+multishell.setTitle(1, 'statemachine')
+multishell.setTitle(2, 'report')

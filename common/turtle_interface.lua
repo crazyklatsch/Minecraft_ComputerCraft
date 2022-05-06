@@ -1,5 +1,6 @@
 
-protocol_turtle_interface = "protocol_turtle_interface"
+protocol_turtle_control = "protocol_turtle_control"
+protocol_turtle_status = "protocol_turtle_state"
 
 local commands = {
     'stop',
@@ -7,6 +8,7 @@ local commands = {
     'continue',
     'append_action',
     'exec_action',
+    'set_master_pc_id',
 }
 
 local actions = {

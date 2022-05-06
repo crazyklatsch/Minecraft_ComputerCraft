@@ -1,15 +1,15 @@
 require('common.turtle_interface')
+require('state')
 actions = require('actions')
 
-local protocol = protocol_turtle_interface
 local stop_requested = false
 local action_queue = {}
 local action_queue_active = true
 
 -- Maybe relocate to config file
 local allowed_pcids = setmetatable({
-    --TODO add MasterMind id
-    "13"
+    "12",
+    "13",
     --example:
     --"5",
     --"6",
@@ -58,9 +58,18 @@ local function command_exec_action(...)
     if(action[next_action] ~= nil) then
         retval = action[next_action](table.unpack(next_action_arguments))
     end
-    -- send retval back to pc
+    -- TODO send retval back to master pc id
+    if master_pc_id ~= nil then
+        rednet.send(master_pc_id, retval, protocol_turtle_control)
+    end
 
+end
 
+local function command_set_master_pc_id(...)
+    state.master_pc_id = tonumber(arg[1])
+    file = fs.open('/master_pc_id', 'w')
+    file.write(tostring(state.master_pc_id))
+    file.close()
 end
 
 command["stop"] = command_stop
@@ -68,6 +77,7 @@ command["pause"] = command_pause
 command["continue"] = command_continue
 command["append_action"] = command_append_action
 command["exec_action"] = command_exec_action
+command["set_master_pc_id"] = command_set_master_pc_id
 
 --#endregion commands
 
@@ -112,9 +122,11 @@ if(not rednet.isOpen()) then
     end
 end
 
+calibrate()
+
 while not stop_requested do
     -- handle incoming messages
-    local pcid, message, _ = rednet.receive(protocol, 0)
+    local pcid, message, _ = rednet.receive(protocol_turtle_control, 0)
     -- message is always a table
     if message and allowed_pcids[tostring(pcid)] then
         new_command = table.remove(message, 1)
@@ -129,9 +141,12 @@ while not stop_requested do
             local next_action_arguments = table.remove(action_queue, 1)
             local next_action = table.remove(next_action_arguments, 1)
             if(action[next_action] ~= nil) then
+                --if action returns false then action_queue_active = false and state = errorstate
                 action[next_action](table.unpack(next_action_arguments))
             end
         end
     end
+
+    --send state to master pc
 
 end

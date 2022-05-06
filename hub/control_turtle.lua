@@ -16,6 +16,7 @@ local function send(...)
             return false
         end
     end
+    print("sending message to id "..id)
     rednet.send(id, msg, protocol)
     return true
 end

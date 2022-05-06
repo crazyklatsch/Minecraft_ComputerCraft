@@ -1,7 +1,7 @@
 require("common.turtle_interface")
 
 
-local protocol = protocol_turtle_interface
+local protocol = protocol_turtle_control
 
 --send expects destination id as first argument and then any number of arguments as message. 
 --Usually the first part of the message is a command from the turtle_interface

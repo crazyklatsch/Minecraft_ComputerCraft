@@ -116,7 +116,7 @@ end
 
 while not stop_requested do
     -- handle incoming messages
-    local pcid, message, _ = rednet.receive(protocol, 0)
+    local pcid, message, _ = rednet.receive(protocol)
     if(message ~= nil) then
         print("message received from "..pcid)
     end

@@ -55,10 +55,8 @@ local function command_exec_action(...)
     local next_action_arguments = {table.unpack(arg)}
     local next_action = table.remove(next_action_arguments, 1)
     local retval = nil
-    print("Action read: "..next_action)
     if(action[next_action] ~= nil) then
         retval = action[next_action](table.unpack(next_action_arguments))
-        print("Action executed and returned: "..retval)
     end
     -- send retval back to pc
 
@@ -116,16 +114,11 @@ end
 
 while not stop_requested do
     -- handle incoming messages
-    local pcid, message, _ = rednet.receive(protocol)
-    if(message ~= nil) then
-        print("message received from "..pcid)
-    end
+    local pcid, message, _ = rednet.receive(protocol, 0)
     -- message is always a table
     if message and allowed_pcids[tostring(pcid)] then
-        print("message accepted")
         new_command = table.remove(message, 1)
         if(command[new_command] ~= nil) then
-            print("Executing command")
             command[new_command](table.unpack(message))
         end
     end

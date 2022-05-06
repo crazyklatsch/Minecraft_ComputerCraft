@@ -9,7 +9,7 @@ local action_queue_active = true
 -- Maybe relocate to config file
 local allowed_pcids = setmetatable({
     --TODO add MasterMind id
-
+    "13"
     --example:
     --"5",
     --"6",

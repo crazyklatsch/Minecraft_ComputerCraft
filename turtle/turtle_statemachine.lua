@@ -52,8 +52,7 @@ end
 -- The exec command executes an action
 local function command_exec_action(...)
     if arg == nil then return false end
-    local msg = {table.unpack(arg)}
-    local next_action_arguments = table.remove(msg, 1)
+    local next_action_arguments = {table.unpack(arg)}
     local next_action = table.remove(next_action_arguments, 1)
     local retval = nil
     if(action[next_action] ~= nil) then
@@ -115,7 +114,6 @@ end
 
 while not stop_requested do
     -- handle incoming messages
-    print("waiting for message ...")
     local pcid, message, protocol = rednet.receive(protocol_turtle_interface, 0)
     -- message is always a table
     if message and allowed_pcids[tostring(pcid)] then

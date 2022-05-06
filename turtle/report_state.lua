@@ -16,11 +16,11 @@ while true do
     end
 
     rednet.send(master_pc_id, {
-        location = state.pos,
-        facing = state.facing,
-        fuel_level = turtle.getFuelLevel(),
-        status = state.status,
-        item_count = item_count,
+        location         = state.pos,
+        facing           = state.facing,
+        fuel_level       = turtle.getFuelLevel(),
+        status           = state.status,
+        item_count       = item_count,
         empty_slot_count = empty_slot_count,
     }, protocol_turtle_status)
 

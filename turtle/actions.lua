@@ -1,7 +1,7 @@
 require('common.globals')
 require('common.utils')
+require('state')
 coordinate = require('common.coordinate')
-state = require('state')
 
 --command[erhalteneskommando[1]](table.unpack(erhalteneskommando, 2))
 

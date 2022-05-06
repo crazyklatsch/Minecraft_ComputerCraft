@@ -122,8 +122,8 @@ if(not rednet.isOpen()) then
     end
 end
 
-calibrate()
 
+calibrate()
 while not stop_requested do
     -- handle incoming messages
     local pcid, message, _ = rednet.receive(protocol_turtle_control, 0)

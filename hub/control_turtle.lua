@@ -23,7 +23,7 @@ end
 
 
 local _,endpos = arg[0]:find("control_turtle.lua")
-if(arg[0] == "turtle_interface" or arg[0]:len() == endpos) then
+if(arg[0] == "control_turtle" or arg[0]:len() == endpos) then
     send(table.unpack(arg))
 end
 

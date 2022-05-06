@@ -8,7 +8,7 @@ local protocol = protocol_turtle_interface
 local function send(...)
     if arg == nil then return false end
     local msg = {table.unpack(arg)}
-    local id = table.remove(msg, 1)
+    local id = tonumber(table.remove(msg, 1))
     if(not rednet.isOpen()) then
         peripheral.find("modem", rednet.open)
         if(not rednet.isOpen()) then

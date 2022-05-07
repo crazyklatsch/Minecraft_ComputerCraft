@@ -39,6 +39,14 @@ function table_invert(t)
    return s
 end
 
+function string_starts_with(text, starting_text)
+   return text:sub(1, #starting_text) == starting_text
+end
+
+function string_ends_with(text, ending_text)
+   return ending_text == "" or text:sub(-#ending_text) == ending_text
+end
+
 -- prints colored text to the terminal
 -- format: &fText with color as hex value
 -- for colors see https://tweaked.cc/module/colors.html

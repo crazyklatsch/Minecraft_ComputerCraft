@@ -6,7 +6,7 @@ require('actions')
 
 local stop_requested = false
 
--- Maybe relocate to config file
+-- TODO Maybe relocate to config file
 local allowed_pcids = setmetatable({
     "12",
     "13",

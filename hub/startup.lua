@@ -1,5 +1,6 @@
-local completion = require "cc.shell.completion"
+local completion = require('cc.shell.completion')
 require("common.turtle_interface")
+require('common.utils')
 
 
 -- set label
@@ -31,6 +32,22 @@ for k, _ in pairs(action) do
     table.insert(actions, k)
 end
 local complete_turtle_control = completion.build(
-    { completion.choice, commands }, { completion.choice, actions }
+    {"id"},
+    { completion.choice, commands },
+    { function(shell, index, argument, previous)
+        local prev = previous[index-1];
+        local complets = {}
+        if(prev == 'append_action' or prev == 'exec_action') then
+            for _, value in pairs(actions) do
+                if string_starts_with(value, argument) then
+                    table.insert(complets, value:sub(#argument + 1, #value))
+                end
+            end
+        end
+        if(prev == 'set_master_pc_id' or prev == 'add_logging_id'  or prev == 'remove_logging_id') then
+            table.insert(complets, "id")
+        end
+        return complets
+    end }
 )
 shell.setCompletionFunction("control_turtle.lua", complete_turtle_control)

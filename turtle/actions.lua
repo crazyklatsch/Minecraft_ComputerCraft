@@ -165,7 +165,7 @@ function act.drop_shit()
     for i = 1, 16 do
         detail = turtle.getItemDetail(i)
         if detail then
-            for _, item in pairs(junk) do
+            for _, item in pairs(mining_junk) do
                 if detail.name:lower():find(item) then
                     turtle.select(i)
                     turtle.refuel()
@@ -220,18 +220,19 @@ end
 function act.save_position()
     log('Saving position @' .. state.pos.x .. '/' .. state.pos.y .. '/' .. state.pos.z, log_levels.DEBUG)
     table.insert(saved_positions, { state.pos.copy, state.facing })
-    return #saved_positions
 end
 
-function act.move_to_saved_position(id)
+function act.move_to_saved_position()
     log('Moving to saved position', log_levels.DEBUG)
-    act.move_absolute(table.unpack(saved_positions[id][1]))
-    act.face(saved_positions[id][2])
-end
-
-function act.clear_saved_positions()
-    log('Clearing saved positions', log_levels.DEBUG)
-    saved_positions = {}
+    local success = false
+    local pose = table.remove(saved_positions)
+    if pose ~= nil then
+        success = act.move_absolute(table.unpack(pose[1]))
+        act.face(pose[2])
+    else
+        log('No saved position on pose-stack', log_levels.WARN)
+    end
+    return success
 end
 
 function act.mine_vein()
@@ -436,5 +437,7 @@ end
 for key, value in pairs(act) do
     if (action[key] ~= nil) then
         action[key] = value
+    else
+        log('Trying to add action not defined in turtle_interface', log_levels.DEBUG)
     end
 end

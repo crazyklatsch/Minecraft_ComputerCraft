@@ -7,6 +7,8 @@ local commands = {
     'exec_action',
     'set_master_pc_id',
     'update_turtle',
+    'add_logging_id',
+    'remove_logging_id',
 }
 
 local actions = {

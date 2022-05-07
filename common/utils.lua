@@ -42,12 +42,8 @@ end
 -- prints colored text to the terminal
 -- format: &fText with color as hex value
 -- for colors see https://tweaked.cc/module/colors.html
-function print_color(...)
-   local s = "&0"
-   for _, v in ipairs(arg) do
-      s = s .. v
-   end
-   s = s .. "&0"
+function print_color(terminal, msg)
+   local s = "&0" .. msg .. "&0"
    local fields = {}
    local lastcolor = "0"
    local lastpos = 0
@@ -58,10 +54,11 @@ function print_color(...)
    end
 
    for i = 2, #fields do
-      term.setTextColor(2 ^ (tonumber(fields[i][2], 16)))
-      term.write(fields[i][1])
+      terminal.setTextColor(2 ^ (tonumber(fields[i][2], 16)))
+      terminal.write(fields[i][1])
    end
    -- reset color and create new line
-   term.setTextColor(color.white)
-   print()
+   terminal.setTextColor(color.white)
+   local x, _ = terminal.getCursorPos()
+   terminal.setCursorPos(x + 1, 0)
 end

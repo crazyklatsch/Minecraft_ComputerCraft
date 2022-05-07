@@ -17,6 +17,7 @@ local function setup()
     os.reboot()
 end
 
-if (arg[0] == "turtle_setup") then
+local _,endpos = arg[0]:find("turtle_setup.lua")
+if(arg[0] == "turtle_setup" or arg[0]:len() == endpos) then
     setup()
 end

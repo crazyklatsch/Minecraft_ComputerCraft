@@ -20,7 +20,7 @@ direction_strings = table_invert(direction)
 
 inf = 1e9
 
-junk = {
+mining_junk = {
     'dirt',
     'cobble',
     'gravel',
@@ -32,7 +32,7 @@ junk = {
     'coal',
 }
 
-print_log_level = log_levels.DEBUG
+print_log_level = log_levels.INFO
 
 -- smaller is more important
 log_levels = {
@@ -52,11 +52,20 @@ log_level_color = {
 }
 
 -- just an array to have easier access to settings via settings.get
-conf = {
+config = {
     master_pc_id = "master_pc_id",
     turtle_move_wait = "turtle_move_wait",
+    logging_ids = "logging_ids",
+    logging_monitor = "logging_monitor",
 }
 
-protocol_logging = "protocol_logging"
-protocol_turtle_control = "protocol_turtle_control"
-protocol_turtle_status = "protocol_turtle_state"
+protocol = {
+    logging = "protocol_logging",
+    turtle_control = "protocol_turtle_control",
+    turtle_status = "protocol_turtle_state",
+}
+
+monitor_ids = {
+    logger = 1,
+    state = 2,
+}

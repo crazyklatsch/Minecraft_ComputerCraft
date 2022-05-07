@@ -32,22 +32,24 @@ for k, _ in pairs(action) do
     table.insert(actions, k)
 end
 local complete_turtle_control = completion.build(
-    { function(shell, index, argument, previous) if argument == "" then return {"id"} end return {} end},
+--    { function(shell, index, argument, previous) if argument == "" then return {"id"} end return {} end},
+    { completion.choice, 'id' },
     { completion.choice, commands },
     { function(shell, index, argument, previous)
-        local prev = previous[index-1];
-        local complets = {}
-        if(prev == 'append_action' or prev == 'exec_action') then
-            for _, value in pairs(actions) do
-                if string_starts_with(value, argument) then
-                    table.insert(complets, value:sub(#argument + 1, #value))
-                end
+    local prev = previous[index - 1];
+    print(prev)
+    local complets = {}
+    if (prev == 'append_action' or prev == 'exec_action') then
+        for _, value in pairs(actions) do
+            if string_starts_with(value, argument) then
+                table.insert(complets, value:sub(#argument + 1, #value))
             end
         end
-        if(prev == 'set_master_pc_id' or prev == 'add_logging_id'  or prev == 'remove_logging_id') then
-            table.insert(complets, "id")
-        end
-        return complets
-    end }
+    end
+    if (prev == 'set_master_pc_id' or prev == 'add_logging_id' or prev == 'remove_logging_id') then
+        table.insert(complets, "id")
+    end
+    return complets
+end }
 )
 shell.setCompletionFunction("control_turtle.lua", complete_turtle_control)

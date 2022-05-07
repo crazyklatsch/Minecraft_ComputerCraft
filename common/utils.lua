@@ -58,7 +58,7 @@ function print_color(terminal, msg)
       terminal.write(fields[i][1])
    end
    -- reset color and create new line
-   terminal.setTextColor(color.white)
+   terminal.setTextColor(1)
    local x, _ = terminal.getCursorPos()
    terminal.setCursorPos(x + 1, 0)
 end

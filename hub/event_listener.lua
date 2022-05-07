@@ -2,7 +2,7 @@ require('common.globals')
 require('state')
 
 while true do
-    event = {os.pullEvent()}
+    event = { os.pullEvent() }
     if event[1] == 'rednet_message' then
         local sender = event[2]
         local message = event[3]
@@ -10,8 +10,10 @@ while true do
 
         -- handle protocols
         if prot == protocol.logging then
-
-            table.insert(state.logs, {message[1], message[2], sender, os.clock()})
+            print('Got message')
+            print(message[1])
+            print(message[2])
+            table.insert(state.logs, { message[1], message[2], sender, os.clock() })
 
         elseif prot == protocol.turtle_status then
             --{"turtled_id" = {turtle_status_table}}
@@ -19,6 +21,6 @@ while true do
         end
     elseif event[1] == 'monitor_touch' then
         -- handle touch
-        table.insert(state.monitor_input, { monitor = event[2], x = event[3], y = event[4]})
+        table.insert(state.monitor_input, { monitor = event[2], x = event[3], y = event[4] })
     end
 end

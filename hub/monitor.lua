@@ -10,6 +10,10 @@ function main()
     --    monitor.clear()
     --    monitor.write(name)
     --end
+    print(#monitors)
+    monitors[monitor_ids.logger].clear()
+    monitors[monitor_ids.logger].setCursorPos(0, 0)
+    monitors[monitor_ids.logger].setTerminalColor(1)
 
     while true do
         -- handle log printing
@@ -17,6 +21,7 @@ function main()
         -- so changing the print_log_level will only affect future log messages
         local log = table.remove(state.logs, 0)
         if log then
+            print(log[1] .. log[2] .. log[3])
             print_to_screen(monitors[monitor_ids.logger], log[1], log[2], log[3])
         end
         sleep(0.2)

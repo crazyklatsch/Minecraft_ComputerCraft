@@ -1,4 +1,5 @@
 require('state')
+require('common.globals')
 
 while true do
     local item_count = 0
@@ -19,7 +20,7 @@ while true do
         status           = state.status,
         item_count       = item_count,
         empty_slot_count = empty_slot_count,
-    }, protocol_turtle_status)
+    }, protocol.turtle_status)
 
     sleep(0.5)
 

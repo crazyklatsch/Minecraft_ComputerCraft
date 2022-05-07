@@ -365,7 +365,7 @@ function act.turn(turns)
             turtle.turnRight()
         end
     else
-        log('Turning left ' .. turns .. ' times', log_levels.DEBUG)
+        log('Turning left ' .. -turns .. ' times', log_levels.DEBUG)
         for i = 1, -1 * turns do
             turtle.turnLeft()
         end

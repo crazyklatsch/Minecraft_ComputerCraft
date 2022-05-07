@@ -42,11 +42,11 @@ local function complete_turtle_control(shell, index, argument, previous)
             end
         end
     elseif index == 3 then
-        local prev = previous[index - 1];
+        local prev = previous[1];
         if (prev == 'append_action' or prev == 'exec_action') then
             for _, value in pairs(actions) do
                 if string_starts_with(value, argument) then
-                    table.insert(complets, value:sub(#argument + 1, #value))
+                    table.insert(complets, value:sub(#argument + 1))
                 end
             end
         end

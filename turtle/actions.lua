@@ -49,7 +49,9 @@ function act.calibrate()
     turtle.forward()
     turtle.turnLeft()
     turtle.turnLeft()
-    act.turn_left(turns)
+    for i = 0, #turns do
+        turtle.turnLeft()
+    end
     state.pos.x = x
     state.pos.y = y
     state.pos.z = z
@@ -435,6 +437,6 @@ for key, value in pairs(act) do
     if (action[key] ~= nil) then
         action[key] = value
     else
-        log('Trying to add action not defined in turtle_interface', log_levels.DEBUG)
+        log('Trying to add action not defined in turtle_interface (' .. key .. ')', log_levels.DEBUG)
     end
 end

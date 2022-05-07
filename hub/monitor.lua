@@ -20,7 +20,7 @@ function main()
         -- handle log printing
         -- this is a log stream implementation,
         -- so changing the print_log_level will only affect future log messages
-        local logg = table.remove(state.logs, 0)
+        local logg = table.remove(state.logs, 1)
         if logg then
             print_to_screen(monitors[monitor_ids.logger], logg[1], logg[2], logg[3])
         end
@@ -36,9 +36,9 @@ function print_to_screen(monitor, log_level, msg, pcid)
     if y == height - 1 then
         -- if screen is full goto end
         monitor.scroll(1)
-        monitor.setCursorPos(1, y)
+        --monitor.setCursorPos(1, y)
     else
-        monitor.setCursorPos(1, y + 1)
+        --monitor.setCursorPos(1, y + 1)
     end
 
     log(msg, log_level, monitor, pcid)

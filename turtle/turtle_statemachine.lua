@@ -85,36 +85,6 @@ command["update_turtle"] = command_update_turtle
 
 --#endregion commands
 
---#region actions
-
-action['calibrate'] = calibrate
-action['safe_dig'] = safe_dig
-action['dig'] = dig
-action['inspect'] = inspect
-action['detect'] = detect
-action['drop_shit'] = drop_shit
-action['move_dir'] = move_dir
-action['save_position'] = save_position
-action['move_to_saved_position'] = move_to_saved_position
-action['clear_saved_positions'] = clear_saved_positions
-action['mine_vein'] = mine_vein
-action['detect_next_ore'] = detect_next_ore
-action['move_back'] = move_back
-action['move_forward'] = move_forward
-action['move_up'] = move_up
-action['move_down'] = move_down
-action['turn_left'] = turn_left
-action['turn_right'] = turn_right
-action['turn_around'] = turn_around
-action['turn'] = turn
-action['face'] = face
-action['move_absolute'] = move_absolute
-action['move_into_direction'] = move_into_direction
-action['move_relative'] = move_relative
-
---#endregion actions
-
-
 
 -- check if rednet is activated
 if (not rednet.isOpen()) then

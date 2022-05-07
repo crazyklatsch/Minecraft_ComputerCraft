@@ -45,10 +45,10 @@ log_levels = {
 log_level_strings = table_invert(log_levels)
 
 log_level_color = {
-    '&e',
-    '&1',
-    '&0',
-    '&8',
+    '&e', -- red
+    '&1', -- orange
+    '&0', -- white
+    '&8', -- light gray
 }
 
 -- just an array to have easier access to settings via settings.get
@@ -56,3 +56,7 @@ conf = {
     master_pc_id = "master_pc_id",
     turtle_move_wait = "turtle_move_wait",
 }
+
+protocol_logging = "protocol_logging"
+protocol_turtle_control = "protocol_turtle_control"
+protocol_turtle_status = "protocol_turtle_state"

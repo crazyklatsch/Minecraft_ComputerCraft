@@ -1,5 +1,3 @@
-protocol_turtle_control = "protocol_turtle_control"
-protocol_turtle_status = "protocol_turtle_state"
 
 local commands = {
     'stop',

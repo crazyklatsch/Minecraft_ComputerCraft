@@ -6,7 +6,7 @@ git.get('common')
 git.get('hub')
 git.get('hub_setup.lua')
 local mylist = fs.list('hub/')
-for i=1, #mylist do
+for i = 1, #mylist do
     shell.run('rm', mylist[i])
 end
 shell.run('mv', '/hub/*', '/')

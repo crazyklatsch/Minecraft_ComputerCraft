@@ -2,7 +2,7 @@ require('common.globals')
 require('common.utils')
 require('common.turtle_interface')
 require('state')
-require('log')
+require('common.logging')
 coordinate = require('common.coordinate')
 
 local act = {}

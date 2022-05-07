@@ -1,3 +1,5 @@
+require('common.utils')
+
 orientation = {
     -- turning right is positive
     north = 1,
@@ -32,8 +34,6 @@ mining_junk = {
     'coal',
 }
 
-print_log_level = log_levels.INFO
-
 -- smaller is more important
 log_levels = {
     ERROR = 1,
@@ -43,6 +43,8 @@ log_levels = {
 }
 
 log_level_strings = table_invert(log_levels)
+
+print_log_level = log_levels.INFO
 
 log_level_color = {
     '&e', -- red

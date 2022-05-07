@@ -1,13 +1,10 @@
 -- turtle status
-
-local coordinate = require("common.coordinate")
+local coordinate = require('common.coordinate')
 
 local state_content = {
     facing = 1,
     pos = coordinate.new,
     status = 0,
-
-
 
     master_pc_id = nil,
 }
@@ -32,5 +29,5 @@ local state_metadata = {
 if state == nil then
     state = setmetatable(state_content, state_metadata)
     --update master_pc_id from file
-    state.master_pc_id = settings.get(settings.master_pc_id)
+    state.master_pc_id = settings.get(config.master_pc_id)
 end

@@ -280,9 +280,9 @@ function act.move_back()
 end
 
 function act.move_forward(amount, force)
-    log('Moving forward for ' .. amount .. ' blocks', log_levels.DEBUG)
     force = force or false
     amount = amount or 1
+    log('Moving forward for ' .. amount .. ' blocks', log_levels.DEBUG)
     for i = 1, amount do
         if force then act.safe_dig(direction.front) end
         local success = turtle.forward()

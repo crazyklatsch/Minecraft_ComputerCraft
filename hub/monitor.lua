@@ -1,5 +1,6 @@
 require('common.globals')
 require('common.utils')
+require('common.logging')
 require('state')
 
 function main()
@@ -10,19 +11,18 @@ function main()
     --    monitor.clear()
     --    monitor.write(name)
     --end
-    print(#monitors)
+
     monitors[monitor_ids.logger].clear()
-    monitors[monitor_ids.logger].setCursorPos(0, 0)
+    monitors[monitor_ids.logger].setCursorPos(1, 1)
     monitors[monitor_ids.logger].setTextColor(1)
 
     while true do
         -- handle log printing
         -- this is a log stream implementation,
         -- so changing the print_log_level will only affect future log messages
-        local log = table.remove(state.logs, 0)
-        if log then
-            print(log[1] .. log[2] .. log[3])
-
+        local logg = table.remove(state.logs, 0)
+        if logg then
+            log(logg[2], logg[1], term, logg[3])
             --print_to_screen(monitors[monitor_ids.logger], log[1], log[2], log[3])
         end
         sleep(0.2)

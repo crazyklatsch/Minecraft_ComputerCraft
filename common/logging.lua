@@ -23,6 +23,7 @@ function log(msg, log_level, terminal, pcid)
 
     -- print locally
     if log_level > print_log_level then return end
+    
     print_color(terminal, message)
 end
 

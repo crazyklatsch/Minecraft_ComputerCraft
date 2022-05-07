@@ -10,9 +10,6 @@ while true do
 
         -- handle protocols
         if prot == protocol.logging then
-            print('Got message')
-            print(message[1])
-            print(message[2])
             table.insert(state.logs, { message[1], message[2], sender, os.clock() })
 
         elseif prot == protocol.turtle_status then

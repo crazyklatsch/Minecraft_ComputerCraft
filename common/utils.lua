@@ -53,14 +53,13 @@ function print_color(terminal, msg)
       lastcolor = clr
       lastpos = pos
    end
-   terminal.setCursorPos(1, 1)
+
    for i = 2, #fields do
       terminal.setTextColor(2 ^ (tonumber(fields[i][2], 16)))
-      print(table_tostring(terminal))
       terminal.write(fields[i][1])
    end
    -- reset color and create new line
    terminal.setTextColor(1)
-   local x, _ = terminal.getCursorPos()
-   terminal.setCursorPos(x + 1, 0)
+   local _, y = terminal.getCursorPos()
+   terminal.setCursorPos(1, y + 1)
 end

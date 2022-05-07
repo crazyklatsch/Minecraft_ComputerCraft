@@ -1,4 +1,3 @@
-
 local commands = {
     'stop',
     'pause',
@@ -36,6 +35,7 @@ local actions = {
     'move_absolute',
     'move_into_direction',
     'move_relative',
+    'transfer_to_inventory',
 }
 
 command = {}

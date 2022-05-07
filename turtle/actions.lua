@@ -10,7 +10,7 @@ local saved_positions = {}
 
 
 -- turning right is positive
-function act.get_new_orientation(turns)
+local function get_new_orientation(turns)
     return ((state.facing + turns - 1) % 4 + 1)
 end
 
@@ -49,7 +49,7 @@ function act.calibrate()
     turtle.forward()
     turtle.turnLeft()
     turtle.turnLeft()
-    for i = 0, #turns do
+    for i = 1, #turns do
         turtle.turnLeft()
     end
     state.pos.x = x
@@ -370,7 +370,7 @@ function act.turn(turns)
             turtle.turnLeft()
         end
     end
-    state.facing = act.get_new_orientation(turns)
+    state.facing = get_new_orientation(turns)
 end
 
 function act.face(side)
@@ -380,8 +380,8 @@ function act.face(side)
 
     if state.facing == side then return end
     if math.abs(state.facing - side) == 2 then act.turn_around() end
-    if side == act.get_new_orientation(1) then act.turn_right() end
-    if side == act.get_new_orientation(-1) then act.turn_left() end
+    if side == get_new_orientation(1) then act.turn_right() end
+    if side == get_new_orientation(-1) then act.turn_left() end
 end
 
 function act.move_absolute(nx, ny, nz, force)

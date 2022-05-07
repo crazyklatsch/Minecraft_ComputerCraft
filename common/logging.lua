@@ -10,7 +10,7 @@ function log(msg, log_level, terminal, pcid)
     local message = '[' .. log_level_color[log_level] .. log_level_strings[log_level] .. '&0]'
     -- append pcid if available
     if pcid then
-        message = message .. '[' .. pcid .. ']'
+        message = '[' .. pcid .. ']' .. message
     end
     message = message .. ' ' .. msg
     -- send message to list of logging_ids

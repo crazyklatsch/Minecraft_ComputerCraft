@@ -49,7 +49,7 @@ function act.calibrate()
     turtle.forward()
     turtle.turnLeft()
     turtle.turnLeft()
-    for i = 1, #turns do
+    for i = 1, turns do
         turtle.turnLeft()
     end
     state.pos.x = x

@@ -32,7 +32,7 @@ for k, _ in pairs(action) do
     table.insert(actions, k)
 end
 local complete_turtle_control = completion.build(
-    { function(shell, index, argument, previous) return "id" end},
+    { function(shell, index, argument, previous) return {"id"} end},
     { completion.choice, commands },
     { function(shell, index, argument, previous)
         local prev = previous[index-1];

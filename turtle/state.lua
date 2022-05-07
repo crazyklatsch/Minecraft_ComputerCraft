@@ -26,6 +26,7 @@ local state_metadata = {
     end
 }
 
+-- pseudo singleton pattern
 if state == nil then
     state = setmetatable(state_content, state_metadata)
     --update master_pc_id from file

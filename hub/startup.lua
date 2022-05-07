@@ -42,7 +42,7 @@ local function complete_turtle_control(shell, index, argument, previous)
             end
         end
     elseif index == 3 then
-        local prev = previous[1];
+        local prev = previous[index];
         if (prev == 'append_action' or prev == 'exec_action') then
             for _, value in pairs(actions) do
                 if string_starts_with(value, argument) then

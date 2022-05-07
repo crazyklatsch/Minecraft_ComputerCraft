@@ -22,7 +22,15 @@ multishell.setTitle(2, 'event listener')
 multishell.setTitle(3, 'monitor')
 
 
+commands = {}
+actions = {}
+for k, _ in pairs(command) do
+    table.insert(commands, k)
+end
+for k, _ in pairs(action) do
+    table.insert(actions, k)
+end
 local complete_turtle_control = completion.build(
-    { completion.choice, command }, { completion.choice, action }
+    { completion.choice, commands }, { completion.choice, actions }
 )
 shell.setCompletionFunction("control_turtle.lua", complete_turtle_control)

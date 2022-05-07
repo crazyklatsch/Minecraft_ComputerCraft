@@ -42,7 +42,7 @@ while not stop_requested do
     -- handle incoming messages
     local pcid, message, _ = rednet.receive(protocol.turtle_control, 0)
     -- message is always a table
-    if message and allowed_pcids[tostring(pcid)] then
+    if message then -- and allowed_pcids[tostring(pcid)] then
         new_command = table.remove(message, 1)
         if (command[new_command] ~= nil) then
             command[new_command](table.unpack(message))

@@ -22,8 +22,8 @@ function main()
         -- so changing the print_log_level will only affect future log messages
         local logg = table.remove(state.logs, 0)
         if logg then
-            log(logg[2], logg[1], term, logg[3])
-            --print_to_screen(monitors[monitor_ids.logger], log[1], log[2], log[3])
+            --log(logg[2], logg[1], term, logg[3])
+            print_to_screen(monitors[monitor_ids.logger], logg[1], logg[2], logg[3])
         end
         sleep(0.2)
     end

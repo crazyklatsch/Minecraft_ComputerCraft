@@ -47,16 +47,16 @@ function print_color(terminal, msg)
    local fields = {}
    local lastcolor = "0"
    local lastpos = 0
-   print(msg)
+
    for pos, clr in s:gmatch("()&(%x)") do
       table.insert(fields, { s:sub(lastpos + 2, pos - 1), lastcolor })
       lastcolor = clr
       lastpos = pos
    end
-
+   terminal.setCursorPos(1, 1)
    for i = 2, #fields do
       terminal.setTextColor(2 ^ (tonumber(fields[i][2], 16)))
-      print('writing ' .. fields[i][1])
+      print(table_tostring(terminal))
       terminal.write(fields[i][1])
    end
    -- reset color and create new line

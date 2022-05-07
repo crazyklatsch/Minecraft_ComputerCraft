@@ -13,11 +13,9 @@ function log(msg, log_level, terminal, pcid)
         message = message .. '[' .. pcid .. ']'
     end
     message = message .. ' ' .. msg
-    print(message)
     -- send message to list of logging_ids
     local logging_ids = settings.get(config.logging_ids)
     if logging_ids then
-        print('inside rednet')
         for _, id in ipairs(logging_ids) do
             payload = table.pack(log_level, msg)
             rednet.send(id, payload, protocol.logging)
@@ -26,6 +24,5 @@ function log(msg, log_level, terminal, pcid)
 
     -- print locally
     if log_level > print_log_level then return end
-    print('before printing')
     print_color(terminal, message)
 end

@@ -1,7 +1,11 @@
 require('common.globals')
 require('common.logging')
 
-path_to_program = arg[1]
+local path_to_program = arg[1]
+if path_to_program == nil then
+    log("Watchdog got nil program.", log_levels.ERROR)
+    return -1
+end
 
 while true do
     local retval = shell.run(path_to_program)

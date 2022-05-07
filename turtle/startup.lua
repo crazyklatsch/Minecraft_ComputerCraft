@@ -1,6 +1,7 @@
 require('common.globals')
 require('common.utils')
 require('common.logging')
+require('common.watchdog')
 
 -- set label
 ---@diagnostic disable-next-line: undefined-field
@@ -14,7 +15,7 @@ settings.define(config.turtle_move_wait, { default = 1.0, type = "number" })
 settings.define(config.logging_ids, { default = { settings.get(config.master_pc_id) }, type = "table" })
 
 
-multishell.launch(_ENV, '/turtle_statemachine.lua')
+multishell.launch(_ENV, '/common/watchdog.lua', '/turtle_statemachine.lua')
 multishell.launch(_ENV, '/report_state.lua')
 multishell.setTitle(2, 'state manager')
 multishell.setTitle(3, 'status report')

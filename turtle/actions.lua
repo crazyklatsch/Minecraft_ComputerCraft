@@ -56,7 +56,7 @@ function act.calibrate()
     state.pos.y = y
     state.pos.z = z
     log('Calibrated to ' .. state.pos.x .. ', ' .. state.pos.y .. ', ' .. state.pos.z, log_levels.INFO)
-    log('Facing ' .. direction_strings[state.facing], log_levels.INFO)
+    log('Facing ' .. orientation_strings[state.facing], log_levels.INFO)
     return true
 end
 
@@ -287,7 +287,7 @@ function act.move_forward(amount, force)
         local success = turtle.forward()
         if not success then
             -- try to wait until block is no longer obstructed
-            sleep(settings.get(settings.turtle_move_wait))
+            sleep(settings.get(config.turtle_move_wait))
             success = turtle.forward()
             -- return false if move not possible
             if not success then
@@ -312,7 +312,7 @@ function act.move_up(amount, force)
         local success = turtle.up()
         if not success then
             -- try to wait until block is no longer obstructed
-            sleep(settings.get(settings.turtle_move_wait))
+            sleep(settings.get(config.turtle_move_wait))
             success = turtle.up()
             -- return false if move not possible
             if not success then

@@ -4,6 +4,7 @@ require('common.globals')
 
 --send expects destination id as first argument and then any number of arguments as message.
 --Usually the first part of the message is a command from the turtle_interface
+-- control_turtle 2 exec_action move_forward
 local function send(...)
     if arg == nil then return false end
     local msg = { table.unpack(arg) }

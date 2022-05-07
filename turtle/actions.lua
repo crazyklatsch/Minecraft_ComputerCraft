@@ -273,10 +273,7 @@ function act.turn_around()
 end
 
 function act.move_back()
-    -- moves turtle backwards once (while keeping orientation)
-    act.turn_around()
-    act.move_forward()
-    act.turn_around()
+    return turtle.back()
 end
 
 function act.move_forward(amount, force)

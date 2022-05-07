@@ -15,9 +15,9 @@ settings.define(config.turtle_move_wait, { default = 1.0, type = "number" })
 settings.define(config.logging_ids, { default = { settings.get(config.master_pc_id) }, type = "table" })
 
 
-multishell.launch(_ENV, '/common/watchdog.lua', '/turtle_statemachine.lua')
-multishell.launch(_ENV, '/report_state.lua')
-multishell.setTitle(2, 'state manager')
-multishell.setTitle(3, 'status report')
+local id_statemachine = multishell.launch(_ENV, '/common/watchdog.lua', '/turtle_statemachine.lua')
+local id_reportstate = multishell.launch(_ENV, '/report_state.lua')
+multishell.setTitle(id_statemachine, 'state manager')
+multishell.setTitle(id_reportstate, 'status report')
 
 log('Starting up', log_levels.INFO)

@@ -44,7 +44,7 @@ log_levels = {
 
 log_level_strings = table_invert(log_levels)
 
-print_log_level = log_levels.INFO
+print_log_level = log_levels.DEBUG
 
 log_level_color = {
     '&e', -- red

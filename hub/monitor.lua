@@ -13,7 +13,7 @@ function main()
     print(#monitors)
     monitors[monitor_ids.logger].clear()
     monitors[monitor_ids.logger].setCursorPos(0, 0)
-    monitors[monitor_ids.logger].setTerminalColor(1)
+    monitors[monitor_ids.logger].setTextColor(1)
 
     while true do
         -- handle log printing
@@ -22,13 +22,14 @@ function main()
         local log = table.remove(state.logs, 0)
         if log then
             print(log[1] .. log[2] .. log[3])
-            print_to_screen(monitors[monitor_ids.logger], log[1], log[2], log[3])
+
+            --print_to_screen(monitors[monitor_ids.logger], log[1], log[2], log[3])
         end
         sleep(0.2)
     end
 end
 
-function print_to_screen(monitor, msg, log_level, pcid)
+function print_to_screen(monitor, log_level, msg, pcid)
     -- TODO horizontal text wrapping -> doesn't it automatically wrap when the monitors size is set?
 
     local x, y = monitor.getCursorPos()

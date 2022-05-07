@@ -54,7 +54,7 @@ function act.calibrate()
     state.pos.y = y
     state.pos.z = z
     log('Calibrated to ' .. state.pos.x .. ', ' .. state.pos.y .. ', ' .. state.pos.z, log_levels.INFO)
-    log('Facing ' .. state.facing, log_levels.INFO)
+    log('Facing ' .. direction_strings[state.facing], log_levels.INFO)
     return true
 end
 

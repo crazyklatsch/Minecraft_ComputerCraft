@@ -1,7 +1,7 @@
 -- pc status
 local state_content = {
     monitor_input = {}, --{monitor, x, y}
-    logs = {}, -- {text, log_level, pcid, os.clock()}
+    logs = {}, -- {log_level, message, pcid, os.clock()}
     turtle_status = {}, --{"turtled_id" = {turtle_status_table}}
 }
 

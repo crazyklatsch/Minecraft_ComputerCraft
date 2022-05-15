@@ -1,7 +1,9 @@
 # Minecraft_ComputerCraft
 Our collection of (lua-) scripts for ComputerCraft. 
 
+DISCLAIMER: This is still WORK IN PROGRESS! Parts of the program may not function as intended or expected.
 
+The git.lua script works perfectly though :)
 
 
 The main branch contains all scripts.
